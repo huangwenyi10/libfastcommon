@@ -3126,7 +3126,7 @@ bool starts_with(const char *str, const char *needle)
     if (needle_len > str_len) {
         return false;
     }
-
+    //memcmp函数是用于比较字符串的，比较内存前N个字节；
     return memcmp(str, needle, needle_len) == 0;
 }
 

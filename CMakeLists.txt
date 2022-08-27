@@ -11,4 +11,6 @@ add_executable(libfastcommon
         src/shared_func.c
         src/ini_file_reader.c
         src/logger.c
+        src/process_ctrl.c
+        src/process_ctrl.h
         src/shared_func.h)

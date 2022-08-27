@@ -71,6 +71,10 @@ int log_init()
 {
 	if (g_log_context.log_buff != NULL)
 	{
+        //__DATE__ 当前日期，一个以 “MMM DD YYYY” 格式表示的字符串常量。
+        //__TIME__ 当前时间，一个以 “HH:MM:SS” 格式表示的字符串常量。
+        //__FILE__ 这会包含当前文件名，一个字符串常量。
+        //__LINE__ 这会包含当前行号，一个十进制常量。
         fprintf(stderr, "file: "__FILE__", line: %d, "
                 "g_log_context already inited\n", __LINE__);
 		return 0;
