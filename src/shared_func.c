@@ -1132,6 +1132,8 @@ int str_replace(const string_t *src, const string_t *old_str,
 
 bool fileExists(const char *filename)
 {
+    //access函数用来判断指定的文件或目录是否存在(F_OK)，已存在的文件或目录是否有可读(R_OK)、可写(W_OK)、可执行(X_OK)权限。
+    // F_OK、R_OK、W_OK、X_OK这四种方式通过access函数中的第二个参数mode指定。如果指定的方式有效，则此函数返回0，否则返回-1。
 	return access(filename, 0) == 0;
 }
 
@@ -1407,11 +1409,19 @@ int writeToFile(const char *filename, const char *buff, const int file_size)
 {
 	int fd;
 	int result;
-
+    //int open(const char * pathname, int flags);
+    //int open(const char * pathname, int flags, mode_t mode);
+    //O_WRONLY: 以只写方式打开文件
+    //O_CREAT: 若打开文件不存在，则自动创建文件
+    //O_TRUNC: 若文件存在并以可写方式打开时，此旗标会另文件长度清为0，而原来存在该文件的资料也会消失
+    //指定文件权限，可以用八进制数表示，比如0644表示-rw-r--r--
 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, 0644);
 	if (fd < 0)
 	{
+        //系统发生了错误，会自动修改 errno 的值
 		result = errno != 0 ? errno : EIO;
+		//__FILE__: 代表当前源代码文件名的字符串文字
+		//__LINE__: 代表当前源代码中的行号的整数常量
 		logError("file: "__FILE__", line: %d, " \
 			"open file %s fail, " \
 			"errno: %d, error info: %s", \
@@ -1428,10 +1438,13 @@ int writeToFile(const char *filename, const char *buff, const int file_size)
 			"errno: %d, error info: %s", \
 			__LINE__, filename, \
 			result, STRERROR(result));
+		//int close(int fd) :该函数用来关闭已打开的文件.指定的参数fd为open()或creat()打开的文件
+		//返回值:关闭成功返回0, 失败则返回-1
 		close(fd);
 		return result;
 	}
-
+    //fsync()负责将参数fd所指的文件数据，由系统缓冲区写回磁盘，以确保数据同步。
+    //返回值 成功则返回0，失败返回-1，errno为错误代码。
 	if (fsync(fd) != 0)
 	{
 		result = errno != 0 ? errno : EIO;
@@ -2916,7 +2929,9 @@ ssize_t fc_safe_write(int fd, const char *buf, const size_t nbyte)
     ssize_t n;
     ssize_t remain;
     const char *p;
-
+    //fd: 文件描述符；
+    //buf: 指定的缓冲区，即指针，指向一段内存单元
+    //byte是要写入文件指定的字节数；返回值：写入文档的字节数（成功）；-1（出错）
     n = write(fd, buf, nbyte);
     if (n < 0)
     {
@@ -2930,7 +2945,7 @@ ssize_t fc_safe_write(int fd, const char *buf, const size_t nbyte)
     {
         return nbyte;
     }
-
+    //buf指针移动n
     p = buf + n;
     remain = nbyte - n;
     while (remain > 0)

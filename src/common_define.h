@@ -159,6 +159,7 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t *attr, int kind);
 #define FC_TIME_UNIT_USECOND  'u'  //microsecond
 #define FC_TIME_UNIT_NSECOND  'n'  //nanosecond
 
+//char *strerror(int errnum)  // 返回一个指针错误字符串描述错误编号
 #define STRERROR(no) (strerror(no) != NULL ? strerror(no) : "Unkown error")
 
 #if defined(OS_LINUX)
