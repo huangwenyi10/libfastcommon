@@ -2469,7 +2469,7 @@ int parse_bytes(const char *pStr, const int default_unit_bytes, int64_t *bytes)
 int set_rand_seed()
 {
 	struct timeval tv;
-
+    //gettimeofday()会把目前的时间用tv 结构体返回，当地时区的信息则放到tz所指的结构中
 	if (gettimeofday(&tv, NULL) != 0)
 	{
 		logError("file: "__FILE__", line: %d, " \

@@ -1392,10 +1392,14 @@ int socketServer2(int af, const char *bind_ipaddr, const int port, int *err_no)
 {
 	int sock;
 	int result;
-	
+	//int socket(int domain, int type, int protocol);
+    //AF_INET: ipv4
+    //type: socket类型有，SOCK_STREAM(TCP)、SOCK_DGRAM、SOCK_RAW、SOCK_PACKET、SOCK_SEQPACKET
+    //protocol协议, 有:IPPROTO_TCP、IPPTOTO_UDP、IPPROTO_SCTP、IPPROTO_TIPC等
 	sock = socket(af, SOCK_STREAM, 0);
 	if (sock < 0)
 	{
+        //EMFILE:已达到进程可同时打开的文件数上限
 		*err_no = errno != 0 ? errno : EMFILE;
 		logError("file: "__FILE__", line: %d, " \
 			"socket create failed, errno: %d, error info: %s", \
