@@ -1110,7 +1110,7 @@ void log_it_ex1(LogContext *pContext, const int priority, \
 			bNeedSync = false;
 			caption = "WARNING";
 			break;
-		case LOG_ERR:logCrit
+		case LOG_ERR:
 			bNeedSync = false;
 			caption = "ERROR";
 			break;
