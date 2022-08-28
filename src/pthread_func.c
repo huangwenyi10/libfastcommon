@@ -36,7 +36,7 @@ int init_pthread_lock(pthread_mutex_t *pthread_lock)
 {
 	pthread_mutexattr_t mat;
 	int result;
-
+    //初始化互斥锁属性对象 pthread_mutexattr_init
 	if ((result=pthread_mutexattr_init(&mat)) != 0) {
 		logError("file: "__FILE__", line: %d, "
 			"call pthread_mutexattr_init fail, "
@@ -44,6 +44,10 @@ int init_pthread_lock(pthread_mutex_t *pthread_lock)
 			__LINE__, result, STRERROR(result));
 		return result;
 	}
+
+    // PTHREAD_MUTEX_TIMED_NP [default] // 当一个线程加锁后, 其余请求锁的线程形成等待队列, 在解锁后按优先级获得锁.
+    // PTHREAD_MUTEX_ADAPTIVE_NP       // 动作最简单的锁类型, 解锁后所有线程重新竞争.
+    // PTHREAD_MUTEX_RECURSIVE_NP      // 允许同一线程对同一锁成功获得多次. 当然也要解锁多次. 其余线程在解锁时重新竞争.
 	if ((result=pthread_mutexattr_settype(&mat,
 			PTHREAD_MUTEX_ERRORCHECK)) != 0)
 	{
@@ -60,6 +64,7 @@ int init_pthread_lock(pthread_mutex_t *pthread_lock)
 			__LINE__, result, STRERROR(result));
 		return result;
 	}
+	//销毁互斥锁属性对象 pthread_mutexattr_destroy
 	if ((result=pthread_mutexattr_destroy(&mat)) != 0) {
 		logError("file: "__FILE__", line: %d, "
 			"call thread_mutexattr_destroy fail, "

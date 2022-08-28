@@ -69,10 +69,11 @@ typedef struct log_context
 	rotate_size > 0 means need rotate log by log file size
 	*/
 	int64_t rotate_size;
-
+	//int64_t  long long Signed 64 8  -9,223,372,036,854,775,808  9,223,372,036,854,775,807
 	/* log file current size */
 	int64_t current_size;
 
+	//如果先写入缓冲区，然后同步到磁盘。默认值为 false（无缓存）
 	/* if write to buffer firstly, then sync to disk.
 	   default value is false (no cache) */
 	bool log_to_cache;
@@ -85,7 +86,7 @@ typedef struct log_context
 
 	/* if stdout to the log file */
     bool take_over_stdout;
-
+    // 时间精度
 	/* time precision */
 	char time_precision;
 
@@ -115,6 +116,7 @@ typedef struct log_context
     LogHeaderCallback print_header_callback;
 
     /*
+     * 压缩N天前的日志文件
      * compress the log files before N days
      * */
     int compress_log_days_before;
