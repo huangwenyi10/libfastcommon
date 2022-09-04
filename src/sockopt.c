@@ -1426,7 +1426,9 @@ int socketServer2(int af, const char *bind_ipaddr, const int port, int *err_no)
 		close(sock);
 		return -3;
 	}
-	
+	//int listen(int sockfd, int backlog)
+    //返回：0──成功， -1──失败
+    //backlog 指定队列的容量, 这个队列用于记录正在连接但是还没有连接完成的客户端
 	if (listen(sock, 1024) < 0)
 	{
 		*err_no = errno != 0 ? errno : EINVAL;
@@ -1444,6 +1446,7 @@ int socketServer2(int af, const char *bind_ipaddr, const int port, int *err_no)
 
 int socketServer(const char *bind_ipaddr, const int port, int *err_no)
 {
+
     return socketServer2(AF_INET, bind_ipaddr, port, err_no);
 }
 
