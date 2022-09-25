@@ -192,6 +192,16 @@ int ioevent_detach(IOEventPoller *ioevent, const int fd)
 int ioevent_poll(IOEventPoller *ioevent)
 {
 #if IOEVENT_USE_EPOLL
+  //epoll_wait, epoll_pwait, epoll_pwait2 等待epoll中的I/O事件发生
+  //int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout);
+   //epfd ：epoll文件描述符
+　 //events ：接口的返回参数，一般都是一个数组，数组长度大于等于maxevents
+　 //maxevents：期望捕获的事件的个数
+　 //timeout ：超时时间(>=0)，单位是毫秒ms，-1表示阻塞，0表示不阻塞
+　 //sigmask：需要屏蔽信号的掩码，可以避免wait时被信号打断
+   //ret: 函数返回值
+   //正常捕获事件后返回事件的个数
+   //超时返回 0
   return epoll_wait(ioevent->poll_fd, ioevent->events, ioevent->size, ioevent->timeout);
 #elif IOEVENT_USE_KQUEUE
   return kevent(ioevent->poll_fd, NULL, 0, ioevent->events, ioevent->size, &ioevent->timeout);

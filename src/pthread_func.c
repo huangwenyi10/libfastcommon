@@ -37,6 +37,7 @@ int init_pthread_lock(pthread_mutex_t *pthread_lock)
 	pthread_mutexattr_t mat;
 	int result;
 
+    //互斥锁属性可以由pthread_mutexattr_init(pthread_mutexattr_t *mattr)来初始化，然后可以调用其他的属性设置方法来设置其属性；
 	if ((result=pthread_mutexattr_init(&mat)) != 0) {
 		logError("file: "__FILE__", line: %d, "
 			"call pthread_mutexattr_init fail, "
@@ -53,6 +54,9 @@ int init_pthread_lock(pthread_mutex_t *pthread_lock)
 			__LINE__, result, STRERROR(result));
 		return result;
 	}
+
+    //用pthread_mutex_init函数动态的创建，函数原型如下：
+    //int pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t * attr)
 	if ((result=pthread_mutex_init(pthread_lock, &mat)) != 0) {
 		logError("file: "__FILE__", line: %d, "
 			"call pthread_mutex_init fail, "
@@ -136,7 +140,10 @@ int init_pthread_attr(pthread_attr_t *pattr, const int stack_size)
 			__LINE__, result, STRERROR(result));
 		return result;
 	}
-
+    //获取线程堆栈大小
+    //attr  指向一个线程属性的指针
+    //stacksize  返回线程的堆栈大小
+    //若是成功返回0,否则返回错误的编号
 	if ((result=pthread_attr_getstacksize(pattr, &old_stack_size)) != 0) {
 		logError("file: "__FILE__", line: %d, "
 			"call pthread_attr_getstacksize fail, "
@@ -168,7 +175,8 @@ int init_pthread_attr(pthread_attr_t *pattr, const int stack_size)
 			return result;
 		}
 	}
-
+    //一个线程的重要属性是可结合的，或者是分离的。一个可结合的线程是能够被其他线程杀死和回收资源的；
+    // 而一个分离的线程不能被其他线程杀死或回收资源。一般来说，默认的属性是可结合的。
 	if ((result=pthread_attr_setdetachstate(pattr,
 			PTHREAD_CREATE_DETACHED)) != 0)
 	{

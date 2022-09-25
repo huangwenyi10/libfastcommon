@@ -32,6 +32,8 @@
 #include "sched_thread.h"
 #include "logger.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wimplicit-function-declaration"
 #ifndef LINE_MAX
 #define LINE_MAX 2048
 #endif
@@ -71,10 +73,11 @@ int log_init()
 {
 	if (g_log_context.log_buff != NULL)
 	{
-        //__DATE__ 当前日期，一个以 “MMM DD YYYY” 格式表示的字符串常量。
-        //__TIME__ 当前时间，一个以 “HH:MM:SS” 格式表示的字符串常量。
-        //__FILE__ 这会包含当前文件名，一个字符串常量。
-        //__LINE__ 这会包含当前行号，一个十进制常量。
+	    //linux下一切皆文件。在所有的文件描述符中，有三个是已经被固定占用了，分别是stdin(文件描述符为0)、stdout(文件描述符为1)、stderr(文件描述符为2)。
+	    // stdin是标准输入，默认是从键盘输入。stdout是标准输出，stderr是标准错误，它们两个的默认输出都是终端。
+	    // 而函数perror就是向stderr中输出，类似fprintf(stderr,"错误信息")。
+        // 另外stderr和stdout还有一个区别就是，stdout是带有行缓冲的，
+        // 所以一行的数据不会直接输出，而是遇见换行符才会输出这一行，但是stderr是没有缓冲区的，它会直接输出。
         fprintf(stderr, "file: "__FILE__", line: %d, "
                 "g_log_context already inited\n", __LINE__);
 		return 0;
@@ -103,9 +106,12 @@ int log_init_ex(LogContext *pContext)
 	pContext->log_level = LOG_INFO;
 	pContext->log_fd = STDERR_FILENO;
 	pContext->time_precision = LOG_TIME_PRECISION_SECOND;
+	//压缩N天前的日志文件
     pContext->compress_log_days_before = 1;
+    //定义：char *strcpy(char* dest, const char *src);
+    //strcpy(): 会将参数 src 字符串拷贝至参数 dest 所指的地址
  	strcpy(pContext->rotate_time_format, "%Y%m%d_%H%M%S");
-
+    // #define LOG_BUFF_SIZE    64 * 1024 = 65536 = 64 K
 	pContext->log_buff = (char *)malloc(LOG_BUFF_SIZE);
 	if (pContext->log_buff == NULL)
 	{
@@ -1208,7 +1214,7 @@ void log_it_ex(LogContext *pContext, const int priority, const char *format, ...
 	{ \
 	va_list ap; \
 	va_start(ap, format); \
-	len = vsnprintf(text, sizeof(text), format, ap);  \
+	len = vsnplogCritrintf(text, sizeof(text), format, ap);  \
 	va_end(ap); \
     if (len >= sizeof(text)) \
     { \
@@ -1358,3 +1364,5 @@ void logDebug(const char *format, ...)
 
 #endif
 
+
+#pragma clang diagnostic pop

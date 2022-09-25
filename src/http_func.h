@@ -22,7 +22,10 @@
 #include <string.h>
 #include <ctype.h>
 #include "common_define.h"
-
+//比较字符串的前n个字符
+//int strncasecmp(const char *s1, const char *s2, size_t n);
+//strncasecmp()用来比较参数s1 和s2 字符串前n个字符，比较时会自动忽略大小写的差异。
+//若参数s1 和s2 字符串相同则返回0。s1 若大于s2 则返回大于0 的值，s1 若小于s2 则返回小于0 的值。
 #define IS_URL_RESOURCE(str)  \
     ((strncasecmp(str, "http://", 7) == 0) || \
      (strncasecmp(str, "https://", 8) == 0))

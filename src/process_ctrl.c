@@ -98,7 +98,7 @@ static int do_stop(const char *pidFilename, const bool bShowError, pid_t *pid)
 
     return result;
   }
-
+  //#define SIGTERM 15      /* software termination signal from kill */
   if (kill(*pid, SIGTERM) == 0) {
     return 0;
   }
@@ -338,7 +338,7 @@ int process_action(const char *pidFilename, const char *action, bool *stop)
 	{
 		return 0;
 	}
-
+    //字符串常量实际上是个指针
 	if (strcmp(action, "stop") == 0)
 	{
 		*stop = true;

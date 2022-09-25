@@ -111,7 +111,7 @@ struct fast_task_info
 	void *ctx;  //context pointer for libserverframe nio
 	struct fast_task_info *next;
 };
-
+//任务队列
 struct fast_task_queue
 {
 	struct fast_task_info *head;

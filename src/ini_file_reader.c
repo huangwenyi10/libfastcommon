@@ -585,6 +585,7 @@ static void iniSortItems(IniContext *pContext)
 int iniLoadFromFile(const char *szFilename, IniContext *pContext)
 {
     return iniLoadFromFileEx(szFilename, pContext,
+            //fast ini annotation with builtin
             FAST_INI_ANNOTATION_WITH_BUILTIN,
             NULL, 0, FAST_INI_FLAGS_NONE);
 }
@@ -663,6 +664,8 @@ int iniLoadFromFileEx(const char *szFilename, IniContext *pContext,
 
 		if (*szFilename == '/')
 		{
+		    //查找在s字符串中最后一次出现字符c的位置。
+            //返回说明：如果str中存在字符ch, 返回出现ch的位置的指针；否则返回 NULL。
 			pLast = strrchr(szFilename, '/');
 			len = pLast - szFilename;
 			if (len >= sizeof(pContext->config_path))
@@ -673,6 +676,9 @@ int iniLoadFromFileEx(const char *szFilename, IniContext *pContext,
 				return ENOSPC;
 			}
 
+            //函数原型：void *memcpy(void *str1, const void *str2, size_t n) ；
+            //从存储区 str2 复制 n 个字节到存储区 str1；
+            //返回值：该函数返回一个指向目标存储区 str1 的指针；
 			memcpy(pContext->config_path, szFilename, len);
 			*(pContext->config_path + len) = '\0';
 			snprintf(full_filename, sizeof(full_filename), \

@@ -90,7 +90,7 @@ static void deal_timeouts(FastTimerEntry *head)
 		}
 	}
 }
-
+//io event loop
 int ioevent_loop(struct nio_thread_data *pThreadData,
 	IOEventCallback recv_notify_callback, TaskCleanUpCallback
 	clean_up_callback, volatile bool *continue_flag)

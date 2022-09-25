@@ -5,12 +5,25 @@ project(libfastcommon C)
 set(CMAKE_CXX_STANDARD 11)
 
 include_directories(src)
-include_directories(php-fastcommon)
+
 
 add_executable(libfastcommon
-        src/shared_func.c
-        src/ini_file_reader.c
-        src/logger.c
+        src/array_allocator.c
+        src/array_allocator.h
+        src/avl_tree.c
+        src/avl_tree.h
+        src/base64.c
+        src/base64.h
+        src/buffered_file_writer.c
+        src/buffered_file_writer.h
+        src/chain.c
+        src/chain.h
+        src/char_convert_loader.c
+        src/char_convert_loader.h
+        src/char_converter.c
+        src/char_converter.h
         src/process_ctrl.c
         src/process_ctrl.h
-        src/shared_func.h)
+        src/ioevent.c
+        src/ioevent.h
+        )

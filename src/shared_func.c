@@ -481,12 +481,20 @@ void daemon_init(bool bCloseFiles)
 #ifndef WIN32
 	pid_t pid;
 	int i;
-	
+	//程序在执行到fork的时候克隆出了子进程，子进程具有当前进程的一切资源。
+    //子进程从fork开始执行，并不执行fork前面的代码。
 	if((pid=fork()) != 0)
 	{
 		exit(0);
 	}
-	
+    //pid_t pid = fork(); //fork a process
+    //if (pid < 0) exit(0); //fork error
+    //if (pid > 0) exit(0); //father process exit
+    //setsid(); [1]  //creat a new session for a process
+    //之前parent和child运行在同一个session里,parent是会话（session）的领头进程,
+    //parent进程作为会话的领头进程，如果exit结束执行的话，那么子进程会成为孤儿进程，并被init收养。
+    //执行setsid()之后,child将重新获得一个新的会话(session)id。
+    //这时parent退出之后,将不会影响到child了。
 	setsid();
 	
 	if((pid=fork()) != 0)
@@ -505,6 +513,7 @@ void daemon_init(bool bCloseFiles)
 			errno, STRERROR(errno));
 	}
 #else
+    //chdir()用来将当前的工作目录改变成以参数path 所指的目录.
 	if (chdir("/") != 0)
 	{
 		logWarning("file: "__FILE__", line: %d, " \
@@ -518,6 +527,7 @@ void daemon_init(bool bCloseFiles)
 	{
 		for(i=0; i<=2; i++)
 		{
+		    //close()函数用于关闭由open()函数所打开的文件
 			close(i);
 		}
 	}
