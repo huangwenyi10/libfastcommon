@@ -36,6 +36,10 @@ int get_pid_from_file(const char *pidFilename, pid_t *pid)
   if ((result=getFileContentEx(pidFilename, buff, 0, &file_size)) != 0) {
     return result;
   }
+  //long int strtol(const char *str, char **endptr, int base)
+  //str -- 要转换为长整数的字符串。
+  //endptr -- 对类型为 char* 的对象的引用，其值由函数设置为 str 中数值后的下一个字符。
+  //base -- 基数，必须介于 2 和 36（包含）之间，或者是特殊值 0。
 
   *pid = strtol(buff, NULL, 10);
   if (*pid == 0) {
@@ -49,7 +53,8 @@ int write_to_pid_file(const char *pidFilename)
 {
   char buff[32];
   int len;
-
+  //sprintf 跟printf 在用法上几乎一样，只是打印的目的地不同而已，前者打印到字符串中，后者则直接在命令行上输出
+  //getpid: 获取当前进程ID
   len = sprintf(buff, "%d", (int)getpid());
   return writeToFile(pidFilename, buff, len);
 }
@@ -57,6 +62,7 @@ int write_to_pid_file(const char *pidFilename)
 int delete_pid_file(const char *pidFilename)
 {
   int result;
+  //来自：#include <sys/types.h>
   pid_t pid;
 
   if ((result=get_pid_from_file(pidFilename, &pid)) != 0) {
